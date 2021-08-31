@@ -1,0 +1,50 @@
+#!/bin/bash
+
+filename="KS_Dir"
+start_directory=$(pwd)
+measurement=
+sum=0
+
+if [ $# = 1 ]
+then
+	measurement=$1
+
+elif [ $# = 2 ]
+then
+	start_directory=$1
+	measurement=$3
+
+elif [ $# = 3 ]
+then
+	filename=$2
+	measurement=$3
+
+elif [ $# = 4 ]
+then
+	filename=$2
+	tart_directory=$3
+	measurement=$4
+
+elif [ $# -gt 4 ]
+then
+	echo "Incorrect amount of arguments"
+	exit 1
+fi
+
+dir_func(){
+	cd $1
+	if [ -e "$filename" ]
+	then
+		measurement_num =$(grep -n  "$measurement" $filename | awk '{print$2}')
+		sum = $((measurement_num + $sum))
+	fi
+	for item in $(ls $pwd); do 
+		if [ -d $item ]
+		then
+			dir_func $item
+		fi
+	done
+}
+
+dir_func $start_directory
+echo "$measurement $sum"
